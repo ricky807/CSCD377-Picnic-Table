@@ -199,6 +199,9 @@ void Display(void)
 	view_matrix = glm::lookAt(vec3(eye[0], eye[1], eye[2]), glm::vec3(center[0], center[1], center[2]), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(view_matrix_loc, 1, GL_FALSE, (GLfloat*)&view_matrix[0]);
 
+	vec4 light_position_camera = view_matrix * light_position;
+	glUniform4fv(glGetUniformLocation(program, "LightPosition"), 1, (GLfloat*)&light_position_camera[0]);
+
 	// Draws the pole
 	material_color = vec3(0.9, 0.5, 0.3);
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
