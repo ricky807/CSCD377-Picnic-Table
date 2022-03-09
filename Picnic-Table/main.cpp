@@ -6,6 +6,7 @@
 
 #include "Plane.h"
 #include "Cube.h"
+#include "pyramid.h"
 
 #define GLM_FORCE_RADIANS 
 
@@ -36,6 +37,7 @@ vec4 light_position(0.0, 4.0, 0.0, 1.0);
 vec3 light_ambient(0.3, 0.3, 0.3);
 vec3 light_color(1.0, 1.0, 1.0);
 vec3 material_color(0.9, 0.5, 0.3);
+float shininess = 50.0f;
 
 // uniform indices of light
 GLuint ambient_loc;
