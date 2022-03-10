@@ -170,6 +170,7 @@ void Initialize(void){
 	
 	createPlane();
 	createCube();
+	createPyramid();
 
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
 	projection_matrix = perspective(radians(90.0f), 1.0f, 1.0f, 20.0f);
@@ -216,6 +217,13 @@ void Display(void)
 	material_color = vec3(0.0, 1.0, 0.0);
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
 	drawPlane();
+
+	// Draws the shade
+	material_color = vec3(0.9, 0.5, 0.3);
+	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
+	mat4 model_matrix = translate(mat4(1.0f), vec3(0.0, 3.5, 0.0)) * scale(mat4(1.0f), vec3(5.0, .75, 5.0));
+	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
+	drawPyramid();
 	
 	glutSwapBuffers();
 }
