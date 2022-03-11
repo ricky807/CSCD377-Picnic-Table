@@ -6,6 +6,38 @@ void createCube()
 {
 	float side = 0.5f;
 
+	GLfloat cube_normals[] = {   // Front
+								0.0f, 0.0f, 1.0f,
+								0.0f, 0.0f, 1.0f,
+								0.0f, 0.0f, 1.0f,
+								0.0f, 0.0f, 1.0f,
+								// Right
+								1.0f, 0.0f, 0.0f,
+								1.0f, 0.0f, 0.0f,
+								1.0f, 0.0f, 0.0f,
+								1.0f, 0.0f, 0.0f,
+								// Top
+								0.0f, 1.0f, 0.0f,
+								0.0f, 1.0f, 0.0f,
+								0.0f,  1.0f,  0.0f,
+								0.0f, 1.0f, 0.0f,
+								// Left
+								-1.0f, 0.0f, 0.0f,
+								-1.0f, 0.0f, 0.0f,
+								-1.0f, 0.0f, 0.0f,
+								-1.0f, 0.0f, 0.0f,
+								// Bottom
+								0.0f, -1.0f, 0.0f,
+								0.0f, -1.0f, 0.0f,
+								0.0f, -1.0f, 0.0f,
+								0.0f, -1.0f, 0.0f,
+								// Back
+								0.0f, 0.0f, -1.0f,
+								0.0f, 0.0f, -1.0f,
+								0.0f, 0.0f, -1.0f,
+								0.0f, 0.0f, -1.0f,
+	};
+
 	GLfloat cube_vertices[] = { side, side, side, 1.0f,  // v0,v1,v2,v3 (front)
 		                       -side, side, side, 1.0f,
 		                       -side, -side, side, 1.0f,
@@ -43,15 +75,20 @@ void createCube()
 	glGenVertexArrays(1, &cube_vao);
 	glBindVertexArray(cube_vao);
 
-	unsigned int handle[2];
-	glGenBuffers(2, handle);
+	unsigned int handle[3];
+	glGenBuffers(3, handle);
 
 	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vertices), cube_vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer((GLuint)0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);  // Vertex position
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube_normals), cube_normals, GL_STATIC_DRAW);
+	glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);  // Vertex position
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[2]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);

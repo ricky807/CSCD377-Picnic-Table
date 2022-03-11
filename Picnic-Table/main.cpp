@@ -6,6 +6,7 @@
 
 #include "Plane.h"
 #include "Cube.h"
+#include "pyramid.h"
 
 #define GLM_FORCE_RADIANS 
 
@@ -32,10 +33,11 @@ mat4 projection_matrix(1.0f);
 mat4 model_matrix(1.0f);
 
 //Add light components
-vec4 light_position(0.0, 4.0, 0.0, 1.0);
+vec4 light_position(5.0, 10.0, 5.0, 1.0);
 vec3 light_ambient(0.3, 0.3, 0.3);
 vec3 light_color(1.0, 1.0, 1.0);
 vec3 material_color(0.9, 0.5, 0.3);
+float shininess = 50.0f;
 
 // uniform indices of light
 GLuint ambient_loc;
@@ -168,6 +170,7 @@ void Initialize(void){
 	
 	createPlane();
 	createCube();
+	createPyramid();
 
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
 	projection_matrix = perspective(radians(90.0f), 1.0f, 1.0f, 20.0f);
@@ -185,6 +188,9 @@ void Initialize(void){
 	material_color_loc = glGetUniformLocation(program, "MaterialColor");
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
 
+	glUniform3fv(glGetUniformLocation(program, "LightColor"), 1, (GLfloat*)&light_color[0]);
+	glUniform1f(glGetUniformLocation(program, "Shininess"), shininess);
+
 }
 
 
@@ -198,6 +204,9 @@ void Display(void)
 	// Setup view matrix
 	view_matrix = glm::lookAt(vec3(eye[0], eye[1], eye[2]), glm::vec3(center[0], center[1], center[2]), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(view_matrix_loc, 1, GL_FALSE, (GLfloat*)&view_matrix[0]);
+
+	vec4 light_position_camera = view_matrix * light_position;
+	glUniform4fv(glGetUniformLocation(program, "LightPosition"), 1, (GLfloat*)&light_position_camera[0]);
 
 	// Draws the pole
 	material_color = vec3(0.9, 0.5, 0.3);
@@ -214,6 +223,13 @@ void Display(void)
 	material_color = vec3(0.0, 1.0, 0.0);
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
 	drawPlane();
+
+	// Draws the shade
+	material_color = vec3(0.9, 0.5, 0.3);
+	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
+	mat4 model_matrix = translate(mat4(1.0f), vec3(0.0, 3.5, 0.0)) * scale(mat4(1.0f), vec3(5.0, .75, 5.0));
+	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
+	drawPyramid();
 	
 	glutSwapBuffers();
 }
