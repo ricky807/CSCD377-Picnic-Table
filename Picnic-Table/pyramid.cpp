@@ -42,18 +42,18 @@ void createPyramid()
 
 
 	vec3 roof_normals[numVertices] = {
-		{normalF}, //front face
-		{normalF},
-		{normalF},
-		{normalR}, // right face
-		{normalR},
-		{normalR},
-		{normalB}, //back face
-		{normalB},
-		{normalB},
-		{normalL}, // left face
-		{normalL},
-		{normalL},
+		normalF, //front face
+		normalF,
+		normalF,
+		normalR, // right face
+		normalR,
+		normalR,
+		normalB, //back face
+		normalB,
+		normalB,
+		normalL, // left face
+		normalL,
+		normalL,
 	};
 
 	GLfloat pyramid_colors[] = { 
@@ -100,14 +100,9 @@ void createPyramid()
 	glEnableVertexAttribArray(0);  // Vertex position
 
 	glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(pyramid_colors), pyramid_colors, GL_STATIC_DRAW);
-	glVertexAttribPointer((GLuint)1, 4, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(1);  // Vertex color
-
-	glBindBuffer(GL_ARRAY_BUFFER, handle[2]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(roof_normals), roof_normals, GL_STATIC_DRAW);
-	glVertexAttribPointer((GLuint)2, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(2);  // Vertex color
+	glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);  // Vertex color
 
 	glBindVertexArray(0);
 

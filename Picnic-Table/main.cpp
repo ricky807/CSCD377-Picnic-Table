@@ -33,7 +33,7 @@ mat4 projection_matrix(1.0f);
 mat4 model_matrix(1.0f);
 
 //Add light components
-vec4 light_position(0.0, 4.0, 0.0, 1.0);
+vec4 light_position(5.0, 10.0, 5.0, 1.0);
 vec3 light_ambient(0.3, 0.3, 0.3);
 vec3 light_color(1.0, 1.0, 1.0);
 vec3 material_color(0.9, 0.5, 0.3);
@@ -187,6 +187,9 @@ void Initialize(void){
 	
 	material_color_loc = glGetUniformLocation(program, "MaterialColor");
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
+
+	glUniform3fv(glGetUniformLocation(program, "LightColor"), 1, (GLfloat*)&light_color[0]);
+	glUniform1f(glGetUniformLocation(program, "Shininess"), shininess);
 
 }
 
