@@ -29,7 +29,10 @@ const double kPI = 3.1415926535897932384626433832795;
 
 mat4 view_matrix(1.0f);
 mat4 projection_matrix(1.0f);
-
+mat4 rotate_matrix(1.0f);
+mat4 translate_matrix(1.0f);
+mat4 scale_matrix(1.0f);
+mat4 shear_matrix(1.0f);
 mat4 model_matrix(1.0f);
 
 //Add light components
@@ -213,13 +216,11 @@ void Display(void)
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
 	model_matrix = translate(mat4(1.0f), vec3(offset, 0.0, 0.0))*scale(mat4(1.0f), vec3(0.20, 8.0, 0.20));
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
-
 	drawCube();
 
 	// Draws the ground
 	model_matrix = translate(mat4(1.0f), vec3(offset, -4.0, 0.0));
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
-
 	material_color = vec3(0.0, 1.0, 0.0);
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
 	drawPlane();
@@ -230,7 +231,24 @@ void Display(void)
 	mat4 model_matrix = translate(mat4(1.0f), vec3(0.0, 3.5, 0.0)) * scale(mat4(1.0f), vec3(5.0, .75, 5.0));
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
 	drawPyramid();
-	
+
+	// Draw the table
+	material_color = vec3(0.9, 0.5, 0.3);
+	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
+	model_matrix = scale(mat4(1.0f), vec3(3.0, .25, 3.0));
+	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
+	drawCube();
+
+	// Draw table legs by drawing them around the table and then rotating them facing towards the table
+	for(int x = 0; x < 360; x += 90)
+	{
+		translate_matrix = translate(mat4(1.0f), vec3(1.2 * cos(radians(1.0f * x)), -2, 1.2 * sin(radians(1.0f * x))));
+		shear_matrix = { .35, 0, 0, 0, -1.2, 4, 0, 0, 0, 0, .35, 0, 0, 0, 0, 1 };
+		rotate_matrix = rotate(mat4(1.0f), radians(1.0f * x), vec3(0.0f, -1.0f, 0.0f));
+		model_matrix = translate_matrix * scale(mat4(1.0f), vec3(1.0, 1.0, 1.0)) * rotate_matrix * shear_matrix ;
+		glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
+		drawCube();
+	}
 	glutSwapBuffers();
 }
 
