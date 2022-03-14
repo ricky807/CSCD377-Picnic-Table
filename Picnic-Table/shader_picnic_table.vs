@@ -16,7 +16,6 @@ out vec4 color;
 
 void main(void)
 {
-
 	vec4 eyeSpacePosition = view_matrix*model_matrix*position;
 	vec3 eyeSpaceNormal = mat3(view_matrix*model_matrix)*normal;
 
@@ -27,12 +26,9 @@ void main(void)
 	vec3 H = normalize(L+V);
 	vec3 specular = LightColor *( pow(max(dot(N, H), 0.0),Shininess));
 	vec4 finalColor = vec4((Ambient+diffuse) * MaterialColor + specular, 1.0);
-	//vec4 finalColor = vec4((Ambient+diffuse)* MaterialColor, 1.0);
-
 
 	color = min(finalColor, vec4(1.0));
 
 	gl_Position = projection_matrix*view_matrix*model_matrix*position;
-
 }
 
