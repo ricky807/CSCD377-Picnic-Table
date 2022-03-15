@@ -23,7 +23,7 @@ GLuint program;
 //different boolean variables
 
 bool show_line = false;
-
+bool top_view = false;
 
 const double kPI = 3.1415926535897932384626433832795;
 
@@ -205,6 +205,16 @@ void Display(void)
 	glDepthFunc(GL_LEQUAL);
 
 	// Setup view matrix
+	if (top_view) {
+		eye[0] = 0.0;
+		eye[1] = 8.0;
+		eye[2] = 0.01; // for some reason it doesn't show anything when set to zero
+	}
+	else{
+		eye[0] = 0.0;
+		eye[1] = 2.5;
+		eye[2] = 8.0;
+	}
 	view_matrix = glm::lookAt(vec3(eye[0], eye[1], eye[2]), glm::vec3(center[0], center[1], center[2]), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(view_matrix_loc, 1, GL_FALSE, (GLfloat*)&view_matrix[0]);
 
@@ -266,6 +276,9 @@ void keyboard(unsigned char key, int x, int y){
 	switch (key){
 	case 'q':case 'Q':
 		exit(EXIT_SUCCESS);
+		break;
+	case 't':case 'T':
+		top_view = !top_view;
 		break;
 	}
 	glutPostRedisplay();
