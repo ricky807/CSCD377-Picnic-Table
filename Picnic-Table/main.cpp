@@ -50,9 +50,10 @@ GLuint material_color_loc;
 
 GLfloat eye[3] = { 0.0f, 2.5f, 8.0f };
 GLfloat center[3] = { 0.0f, 0.0f, 0.0f };
+GLfloat cameraRotation[3] = { 0.0f, 0.0f, 0.0f };
 GLfloat offset = 0.0;
 
-GLfloat rotateAngle = 0.0f;
+GLfloat angle = 0.0f;
 
 char* ReadFile(const char* filename);
 GLuint initShaders(const char* v_shader, const char* f_shader);
@@ -209,13 +210,21 @@ void Display(void)
 		eye[0] = 0.0;
 		eye[1] = 8.0;
 		eye[2] = 0.01; // for some reason it doesn't show anything when set to zero
+
+		cameraRotation[0] = -8.0 * cos(radians(angle));
+		cameraRotation[1] = 0.0;
+		cameraRotation[2] = -8.0 * sin(radians(angle));
 	}
 	else{
-		eye[0] = 0.0;
-		eye[1] = 2.5;
-		eye[2] = 8.0;
+		eye[0] = 8.0 * cos(radians(angle));
+		eye[1] = 2.75;
+		eye[2] = 8.0 * sin(radians(angle));
+
+		cameraRotation[0] = 0.0;
+		cameraRotation[1] = 1.0;
+		cameraRotation[2] = 0.0;
 	}
-	view_matrix = glm::lookAt(vec3(eye[0], eye[1], eye[2]), glm::vec3(center[0], center[1], center[2]), glm::vec3(0.0f, 1.0f, 0.0f));
+	view_matrix = glm::lookAt(vec3(eye[0], eye[1], eye[2]), glm::vec3(center[0], center[1], center[2]), glm::vec3(cameraRotation[0], cameraRotation[1], cameraRotation[2]));
 	glUniformMatrix4fv(view_matrix_loc, 1, GL_FALSE, (GLfloat*)&view_matrix[0]);
 
 	vec4 light_position_camera = view_matrix * light_position;
@@ -261,8 +270,8 @@ void Display(void)
 		drawCube();
 
 		// Draws the chairs
-		translate_matrix = translate(mat4(1.0f), vec3(3 * cos(radians(1.0f * x)), -2, 3 * sin(radians(1.0f * x))));
-		scale_matrix = scale(mat4(1.0f), vec3(1.7, 1.7, 1.7));
+		translate_matrix = translate(mat4(1.0f), vec3(3.2 * cos(radians(1.0f * x)), -3, 3.2 * sin(radians(1.0f * x))));
+		scale_matrix = scale(mat4(1.0f), vec3(2.2, 2.2, 2.2));
 		model_matrix = translate_matrix * scale_matrix;
 		glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
 		drawCube();
@@ -284,6 +293,13 @@ void keyboard(unsigned char key, int x, int y){
 	glutPostRedisplay();
 }
 
+void timer(int n) {
+
+	angle += 5.0f;
+	glutPostRedisplay();
+	glutTimerFunc(100, timer, 1);
+
+}
 /*********/
 int main(int argc, char** argv){
 
@@ -301,6 +317,7 @@ int main(int argc, char** argv){
 	printf("%s\n", glGetString(GL_VERSION));
 	glutDisplayFunc(Display);
 	glutKeyboardFunc(keyboard);
+	glutTimerFunc(100, timer, 1);
 	glutMainLoop();
 	
 	return 0;
