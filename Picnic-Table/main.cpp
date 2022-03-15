@@ -239,13 +239,21 @@ void Display(void)
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
 	drawCube();
 
-	// Draw table legs by drawing them around the table and then rotating them facing towards the table
+	// draws four legs and chairs
 	for(int x = 0; x < 360; x += 90)
 	{
+		// Draw table legs by drawing them around the table and then rotating them facing towards the table
 		translate_matrix = translate(mat4(1.0f), vec3(1.2 * cos(radians(1.0f * x)), -2, 1.2 * sin(radians(1.0f * x))));
 		shear_matrix = { .35, 0, 0, 0, -1.2, 4, 0, 0, 0, 0, .35, 0, 0, 0, 0, 1 };
 		rotate_matrix = rotate(mat4(1.0f), radians(1.0f * x), vec3(0.0f, -1.0f, 0.0f));
 		model_matrix = translate_matrix * scale(mat4(1.0f), vec3(1.0, 1.0, 1.0)) * rotate_matrix * shear_matrix ;
+		glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
+		drawCube();
+
+		// Draws the chairs
+		translate_matrix = translate(mat4(1.0f), vec3(3 * cos(radians(1.0f * x)), -2, 3 * sin(radians(1.0f * x))));
+		scale_matrix = scale(mat4(1.0f), vec3(1.7, 1.7, 1.7));
+		model_matrix = translate_matrix * scale_matrix;
 		glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
 		drawCube();
 	}
