@@ -230,6 +230,11 @@ void Display(void)
 	vec4 light_position_camera = view_matrix * light_position;
 	glUniform4fv(glGetUniformLocation(program, "LightPosition"), 1, (GLfloat*)&light_position_camera[0]);
 
+	if (show_line) // to show wires
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	// Draws the pole
 	material_color = vec3(0.9, 0.5, 0.3);
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
@@ -288,6 +293,9 @@ void keyboard(unsigned char key, int x, int y){
 		break;
 	case 't':case 'T':
 		top_view = !top_view;
+		break;
+	case 'w':case 'W':
+		show_line = !show_line;
 		break;
 	}
 	glutPostRedisplay();
