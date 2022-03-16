@@ -1,4 +1,4 @@
-#include "pyramid.h"
+#include "ShadeBasic.h"
 
 unsigned int pyramid_vao;
 

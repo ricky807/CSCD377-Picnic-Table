@@ -6,7 +6,7 @@
 
 #include "Plane.h"
 #include "Cube.h"
-#include "pyramid.h"
+#include "ShadeBasic.h"
 
 #define GLM_FORCE_RADIANS 
 
