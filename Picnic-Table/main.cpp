@@ -6,7 +6,7 @@
 
 #include "Plane.h"
 #include "Cube.h"
-#include "pyramid.h"
+#include "ShadeBasic.h"
 
 #define GLM_FORCE_RADIANS 
 
@@ -23,7 +23,7 @@ GLuint program;
 //different boolean variables
 
 bool show_line = false;
-
+bool top_view = false;
 
 const double kPI = 3.1415926535897932384626433832795;
 
@@ -50,9 +50,10 @@ GLuint material_color_loc;
 
 GLfloat eye[3] = { 0.0f, 2.5f, 8.0f };
 GLfloat center[3] = { 0.0f, 0.0f, 0.0f };
+GLfloat cameraRotation[3] = { 0.0f, 0.0f, 0.0f };
 GLfloat offset = 0.0;
 
-GLfloat rotateAngle = 0.0f;
+GLfloat angle = 0.0f;
 
 char* ReadFile(const char* filename);
 GLuint initShaders(const char* v_shader, const char* f_shader);
@@ -205,11 +206,34 @@ void Display(void)
 	glDepthFunc(GL_LEQUAL);
 
 	// Setup view matrix
-	view_matrix = glm::lookAt(vec3(eye[0], eye[1], eye[2]), glm::vec3(center[0], center[1], center[2]), glm::vec3(0.0f, 1.0f, 0.0f));
+	if (top_view) {
+		eye[0] = 0.0;
+		eye[1] = 8.0;
+		eye[2] = 0.01; // for some reason it doesn't show anything when set to zero
+
+		cameraRotation[0] = -8.0 * cos(radians(angle));
+		cameraRotation[1] = 0.0;
+		cameraRotation[2] = -8.0 * sin(radians(angle));
+	}
+	else{
+		eye[0] = 8.0 * cos(radians(angle));
+		eye[1] = 2.75;
+		eye[2] = 8.0 * sin(radians(angle));
+
+		cameraRotation[0] = 0.0;
+		cameraRotation[1] = 1.0;
+		cameraRotation[2] = 0.0;
+	}
+	view_matrix = glm::lookAt(vec3(eye[0], eye[1], eye[2]), glm::vec3(center[0], center[1], center[2]), glm::vec3(cameraRotation[0], cameraRotation[1], cameraRotation[2]));
 	glUniformMatrix4fv(view_matrix_loc, 1, GL_FALSE, (GLfloat*)&view_matrix[0]);
 
 	vec4 light_position_camera = view_matrix * light_position;
 	glUniform4fv(glGetUniformLocation(program, "LightPosition"), 1, (GLfloat*)&light_position_camera[0]);
+
+	if (show_line) // to show wires
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// Draws the pole
 	material_color = vec3(0.9, 0.5, 0.3);
@@ -239,13 +263,21 @@ void Display(void)
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
 	drawCube();
 
-	// Draw table legs by drawing them around the table and then rotating them facing towards the table
+	// draws four legs and chairs
 	for(int x = 0; x < 360; x += 90)
 	{
+		// Draw table legs by drawing them around the table and then rotating them facing towards the table
 		translate_matrix = translate(mat4(1.0f), vec3(1.2 * cos(radians(1.0f * x)), -2, 1.2 * sin(radians(1.0f * x))));
 		shear_matrix = { .35, 0, 0, 0, -1.2, 4, 0, 0, 0, 0, .35, 0, 0, 0, 0, 1 };
 		rotate_matrix = rotate(mat4(1.0f), radians(1.0f * x), vec3(0.0f, -1.0f, 0.0f));
 		model_matrix = translate_matrix * scale(mat4(1.0f), vec3(1.0, 1.0, 1.0)) * rotate_matrix * shear_matrix ;
+		glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
+		drawCube();
+
+		// Draws the chairs
+		translate_matrix = translate(mat4(1.0f), vec3(3.2 * cos(radians(1.0f * x)), -3, 3.2 * sin(radians(1.0f * x))));
+		scale_matrix = scale(mat4(1.0f), vec3(2.2, 2.2, 2.2));
+		model_matrix = translate_matrix * scale_matrix;
 		glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
 		drawCube();
 	}
@@ -259,10 +291,23 @@ void keyboard(unsigned char key, int x, int y){
 	case 'q':case 'Q':
 		exit(EXIT_SUCCESS);
 		break;
+	case 't':case 'T':
+		top_view = !top_view;
+		break;
+	case 'w':case 'W':
+		show_line = !show_line;
+		break;
 	}
 	glutPostRedisplay();
 }
 
+void timer(int n) {
+
+	angle += 5.0f;
+	glutPostRedisplay();
+	glutTimerFunc(100, timer, 1);
+
+}
 /*********/
 int main(int argc, char** argv){
 
@@ -280,6 +325,7 @@ int main(int argc, char** argv){
 	printf("%s\n", glGetString(GL_VERSION));
 	glutDisplayFunc(Display);
 	glutKeyboardFunc(keyboard);
+	glutTimerFunc(100, timer, 1);
 	glutMainLoop();
 	
 	return 0;
