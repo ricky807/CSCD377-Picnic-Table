@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include <IL/il.h>
+#include <IL/ilu.h>
+#include <IL/ilut.h>
+
 #include "Plane.h"
 #include "Cube.h"
 #include "ShadeBasic.h"
@@ -55,6 +59,7 @@ GLfloat offset = 0.0;
 
 GLfloat angle = 0.0f;
 
+GLuint planeTexID;
 char* ReadFile(const char* filename);
 GLuint initShaders(const char* v_shader, const char* f_shader);
 
@@ -160,6 +165,44 @@ GLuint initShaders(const char* v_shader, const char* f_shader) {
 
 }
 
+unsigned int loadTexture(const char* filename) {
+
+	ILboolean success;
+	unsigned int imageID;
+	ilGenImages(1, &imageID);
+
+	ilBindImage(imageID); /* Binding of DevIL image name */
+	ilEnable(IL_ORIGIN_SET);
+	ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
+	success = ilLoadImage((ILstring)filename);
+
+	if (!success) {
+		printf("Couldn't load the following texture file: %s", filename);
+		// The operation was not sucessfull hence free image and texture 
+		ilDeleteImages(1, &imageID);
+		return 0;
+	}
+
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+
+	GLuint tid;
+	glGenTextures(1, &tid);
+	glBindTexture(GL_TEXTURE_2D, tid);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT), 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	/* Because we have already copied image data into texture data
+	we can release memory used by image. */
+
+	ilDeleteImages(1, &imageID);
+	return tid;
+}
+
 /*******************************************************/
 void Initialize(void){
 	// Create the program for rendering the model
@@ -195,6 +238,9 @@ void Initialize(void){
 	glUniform3fv(glGetUniformLocation(program, "LightColor"), 1, (GLfloat*)&light_color[0]);
 	glUniform1f(glGetUniformLocation(program, "Shininess"), shininess);
 
+	glUniform1i(glGetUniformLocation(program, "Text1"), 0);
+	planeTexID = loadTexture("vangogh.jpg");
+	glActiveTexture(GL_TEXTURE0);
 }
 
 
@@ -247,6 +293,7 @@ void Display(void)
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
 	material_color = vec3(0.0, 1.0, 0.0);
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
+	glBindTexture(GL_TEXTURE_2D, planeTexID);
 	drawPlane();
 
 	// Draws the shade
@@ -320,7 +367,7 @@ int main(int argc, char** argv){
 	if (glewInit()) {
 		printf("Unable to initialize GLEW ... exiting\n");
 	}
-
+	ilInit(); // for textures
 	Initialize();
 	printf("%s\n", glGetString(GL_VERSION));
 	glutDisplayFunc(Display);

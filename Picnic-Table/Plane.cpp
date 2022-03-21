@@ -11,6 +11,14 @@ void createPlane()
 								-side, 0.0, -side, 1.0,//3
 	};
 
+	GLfloat plane_textures[] = {
+		0.0, 1.0,
+		1.0, 1.0,
+		0.0, 0.0,
+		1.0, 0.0,
+
+	};
+
 	GLushort plane_indices[] = { 0, 1, 2,
 													2, 3, 0
 	};
@@ -26,8 +34,8 @@ void createPlane()
 	glGenVertexArrays(1, &plane_vao);
 	glBindVertexArray(plane_vao);
 
-	unsigned int handle[3];
-	glGenBuffers(3, handle);
+	unsigned int handle[4];
+	glGenBuffers(4, handle);
 
 	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(plane_vertices), plane_vertices, GL_STATIC_DRAW);
@@ -39,7 +47,12 @@ void createPlane()
 	glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);  // normals
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[2]);
+	glBindBuffer(GL_ARRAY_BUFFER, handle[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(plane_textures), plane_textures, GL_STATIC_DRAW);
+	glVertexAttribPointer((GLuint)2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(2);  // texture
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[3]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(plane_indices), plane_indices, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);

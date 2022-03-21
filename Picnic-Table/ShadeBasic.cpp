@@ -55,38 +55,6 @@ void createPyramid()
 		normalL,
 		normalL,
 	};
-
-	GLfloat pyramid_colors[] = { 
-							 
-
-							  //front -- red
-							  1.0f, 0.0f, 0.0f, 1.0f,
-							  1.0f, 0.0f, 0.0f, 1.0f,
-		                      1.0f, 0.0f, 0.0f, 1.0f,
-
-							  //right -- red
-
-							  1.0f, 0.0f, 0.0f, 1.0f,
-		                      1.0f, 0.0f, 0.0f, 1.0f,
-		                      1.0f, 0.0f, 0.0f, 1.0f,
-
-							  //left -- red
-							  1.0f, 0.0f, 0.0f, 1.0f,
-							  1.0f, 0.0f, 0.0f, 1.0f,
-							  1.0f, 0.0f, 0.0f, 1.0f,
-
-							  //back -- red
-							 1.0f, 0.0f, 0.0f, 1.0f,
-							 1.0f, 0.0f, 0.0f, 1.0f,
-							 1.0f, 0.0f, 0.0f, 1.0f,
-							 
-							 };
-
-	GLushort pyramid_indices[] = { 0, 1, 2, 
-									0,2,3,
-	0,3,4,
-	0,4,5};
-
 	
 	glGenVertexArrays(1, &pyramid_vao);
 	glBindVertexArray(pyramid_vao);
