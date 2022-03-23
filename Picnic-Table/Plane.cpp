@@ -4,11 +4,11 @@ unsigned int plane_vao;
 
 void createPlane()
 {
-	float side = 40.0f;
-	GLfloat plane_vertices[] = { -side, 0.0, side, 1.0, //0
-								 side, 0.0, side, 1.0,  //1
-								side, 0.0, -side, 1.0,//2
-								-side, 0.0, -side, 1.0,//3
+	float side = 3.0f;
+	GLfloat plane_vertices[] = { -side, side, 0.0, 1.0, //0   (0,1)
+								 side, side, 0.0, 1.0,  //1   (1,1)
+								-side, -side, 0.0, 1.0, //2   (0,0)
+								side, -side, 0.0, 1.0,  //3   (1, 0)
 	};
 
 	GLfloat plane_textures[] = {
@@ -19,9 +19,7 @@ void createPlane()
 
 	};
 
-	GLushort plane_indices[] = { 0, 1, 2,
-													2, 3, 0
-	};
+	GLushort plane_indices[] = { 0, 1, 2, 2, 3, 1};
 
 	GLfloat plane_normals[] =
 	{

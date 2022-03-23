@@ -34,6 +34,9 @@
     <None Include="shader_picnic_table.fs" />
     <None Include="shader_picnic_table.vs" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="stone.jpg" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

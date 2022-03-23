@@ -226,11 +226,9 @@ void Initialize(void){
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Add uniform indices for light and material
-
 	
 	ambient_loc = glGetUniformLocation(program, "Ambient");
 	glUniform3fv(ambient_loc, 1, (GLfloat*)&light_ambient[0]);
-
 	
 	material_color_loc = glGetUniformLocation(program, "MaterialColor");
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
@@ -239,7 +237,7 @@ void Initialize(void){
 	glUniform1f(glGetUniformLocation(program, "Shininess"), shininess);
 
 	glUniform1i(glGetUniformLocation(program, "Text1"), 0);
-	planeTexID = loadTexture("vangogh.jpg");
+	planeTexID = loadTexture("stone.jpg");
 	glActiveTexture(GL_TEXTURE0);
 }
 
@@ -289,11 +287,11 @@ void Display(void)
 	drawCube();
 
 	// Draws the ground
-	model_matrix = translate(mat4(1.0f), vec3(offset, -4.0, 0.0));
+	rotate_matrix = rotate(mat4(1.0f), radians(90.0f), vec3(1.0f, 0.0f, 0.0f));
+	scale_matrix = scale(mat4(1.0f), vec3(5.5, 5.5, 5.5));
+	model_matrix = translate(mat4(1.0f), vec3(offset, -4.0, 0.0)) * rotate_matrix * scale_matrix;
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
-	material_color = vec3(0.0, 1.0, 0.0);
-	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
-	glBindTexture(GL_TEXTURE_2D, planeTexID);
+	glBindTexture(GL_TEXTURE_2D, planeTexID); //texture
 	drawPlane();
 
 	// Draws the shade

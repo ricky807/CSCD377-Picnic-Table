@@ -2,33 +2,25 @@
 
 layout (location = 0) in vec4 position;
 layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 VertexTexCoord;
 
 uniform mat4 model_matrix;
 uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
-uniform vec3 Ambient;
-uniform vec3 MaterialColor;
-uniform vec3 LightColor;
 uniform vec4 LightPosition;
-uniform float Shininess;
 
-out vec4 color;
+out vec4 eyeSpacePosition;
+out vec3 eyeSpaceNormal;
+out vec3 lightDirection;
+out vec2 TexCoord;
 
-void main(void)
-{
-	vec4 eyeSpacePosition = view_matrix*model_matrix*position;
-	vec3 eyeSpaceNormal = mat3(view_matrix*model_matrix)*normal;
+void main(void){
 
-	vec3 N = normalize(eyeSpaceNormal);
-	vec3 L = normalize(LightPosition.xyz - eyeSpacePosition.xyz);
-	vec3 diffuse =  LightColor * (max(dot(L,N), 0.0));
-	vec3 V = normalize(vec3(0,0,0) - eyeSpacePosition.xyz);
-	vec3 H = normalize(L+V);
-	vec3 specular = LightColor *( pow(max(dot(N, H), 0.0),Shininess));
-	vec4 finalColor = vec4((Ambient+diffuse) * MaterialColor + specular, 1.0);
+eyeSpacePosition = view_matrix*model_matrix*position;
+eyeSpaceNormal = mat3(view_matrix*model_matrix)*normal;
+lightDirection = LightPosition.xyz - eyeSpacePosition.xyz;
+TexCoord = VertexTexCoord;
 
-	color = min(finalColor, vec4(1.0));
-
-	gl_Position = projection_matrix*view_matrix*model_matrix*position;
+gl_Position = projection_matrix*view_matrix*model_matrix*position;
 }
 
