@@ -22,12 +22,12 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Plane.cpp" />
-    <ClCompile Include="ShadeBasic.cpp" />
+    <ClCompile Include="roof.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Plane.h" />
-    <ClInclude Include="ShadeBasic.h" />
+    <ClInclude Include="roof.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assignment6.pdf" />
