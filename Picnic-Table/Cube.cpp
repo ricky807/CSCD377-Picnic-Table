@@ -123,7 +123,7 @@ void createCube()
 	glVertexAttribPointer((GLuint)2, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(2);  // texture
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[2]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[3]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);

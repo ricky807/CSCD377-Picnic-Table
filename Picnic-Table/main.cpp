@@ -59,8 +59,7 @@ GLfloat offset = 0.0;
 
 GLfloat angle = 0.0f;
 
-GLuint planeTexID;
-GLuint cubeTexID;
+GLuint stoneTexID, woodTexID, fabricTexID;
 
 char* ReadFile(const char* filename);
 GLuint initShaders(const char* v_shader, const char* f_shader);
@@ -239,8 +238,9 @@ void Initialize(void){
 	glUniform1f(glGetUniformLocation(program, "Shininess"), shininess);
 
 	glUniform1i(glGetUniformLocation(program, "Text1"), 0);
-	planeTexID = loadTexture("stone.jpg");
-	cubeTexID = loadTexture("wood.jpg");
+	stoneTexID = loadTexture("stone.jpg");
+	woodTexID = loadTexture("wood.jpg");
+	fabricTexID = loadTexture("fabric.jpg");
 	glActiveTexture(GL_TEXTURE0);
 }
 
@@ -285,7 +285,7 @@ void Display(void)
 	// Draws the pole
 	material_color = vec3(0.9, 0.5, 0.3);
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
-	model_matrix = translate(mat4(1.0f), vec3(offset, 0.0, 0.0))*scale(mat4(1.0f), vec3(0.20, 8.0, 0.20));
+	model_matrix = translate(mat4(1.0f), vec3(offset, 0.0, 0.0))*scale(mat4(1.0f), vec3(0.20, 9.0, 0.20));
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
 	drawCube();
 
@@ -294,7 +294,7 @@ void Display(void)
 	scale_matrix = scale(mat4(1.0f), vec3(5.5, 5.5, 5.5));
 	model_matrix = translate(mat4(1.0f), vec3(offset, -4.0, 0.0)) * rotate_matrix * scale_matrix;
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
-	glBindTexture(GL_TEXTURE_2D, planeTexID); //texture
+	glBindTexture(GL_TEXTURE_2D, stoneTexID); //texture
 	drawPlane();
 
 	// Draws the shade
@@ -302,7 +302,7 @@ void Display(void)
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
 	mat4 model_matrix = translate(mat4(1.0f), vec3(0.0, 3.5, 0.0)) * scale(mat4(1.0f), vec3(5.0, .75, 5.0));
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
-	glBindTexture(GL_TEXTURE_2D, planeTexID); //texture
+	glBindTexture(GL_TEXTURE_2D, fabricTexID); //texture
 	drawPyramid();
 
 	// Draw the table
@@ -310,7 +310,7 @@ void Display(void)
 	glUniform3fv(material_color_loc, 1, (GLfloat*)&material_color[0]);
 	model_matrix = scale(mat4(1.0f), vec3(3.0, .25, 3.0));
 	glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
-	glBindTexture(GL_TEXTURE_2D, cubeTexID); //texture
+	glBindTexture(GL_TEXTURE_2D, woodTexID); //texture
 	drawCube();
 
 	// draws four legs and chairs
@@ -329,7 +329,7 @@ void Display(void)
 		scale_matrix = scale(mat4(1.0f), vec3(2.2, 2.2, 2.2));
 		model_matrix = translate_matrix * scale_matrix;
 		glUniformMatrix4fv(matrix_loc, 1, GL_FALSE, (GLfloat*)&model_matrix[0]);
-		glBindTexture(GL_TEXTURE_2D, cubeTexID); //texture
+		glBindTexture(GL_TEXTURE_2D, woodTexID); //texture
 		drawCube();
 	}
 	glutSwapBuffers();
@@ -354,9 +354,9 @@ void keyboard(unsigned char key, int x, int y){
 
 void timer(int n) {
 
-	angle += 5.0f;
+	angle += 1.25f;
 	glutPostRedisplay();
-	glutTimerFunc(100, timer, 1);
+	glutTimerFunc(25, timer, 1);
 
 }
 /*********/
@@ -376,7 +376,7 @@ int main(int argc, char** argv){
 	printf("%s\n", glGetString(GL_VERSION));
 	glutDisplayFunc(Display);
 	glutKeyboardFunc(keyboard);
-	glutTimerFunc(100, timer, 1);
+	glutTimerFunc(25, timer, 1);
 	glutMainLoop();
 	
 	return 0;

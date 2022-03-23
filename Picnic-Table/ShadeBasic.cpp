@@ -55,6 +55,24 @@ void createPyramid()
 		normalL,
 		normalL,
 	};
+
+	vec2 roof_textures[numVertices] = {
+		{0.5, 0.5},  //front
+		{0.0, 0.0},
+		{1.0, 0.0},
+
+		{0.5, 0.5},
+		{1.0, 0.0},
+		{1.0, 1.0},
+
+		{0.5, 0.5},
+		{1.0, 1.0},
+		{0.0, 1.0},
+
+		{0.5, 0.5},
+		{0.0, 1.0},
+		{0.0, 0.0},
+	};
 	
 	glGenVertexArrays(1, &pyramid_vao);
 	glBindVertexArray(pyramid_vao);
@@ -71,6 +89,11 @@ void createPyramid()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(roof_normals), roof_normals, GL_STATIC_DRAW);
 	glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);  // Vertex color
+
+	glBindBuffer(GL_ARRAY_BUFFER, handle[2]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vec2) * numVertices, roof_textures, GL_STATIC_DRAW);
+	glVertexAttribPointer((GLuint)2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(2);  // Vertex texture
 
 	glBindVertexArray(0);
 

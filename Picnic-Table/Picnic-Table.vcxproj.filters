@@ -57,5 +57,8 @@
     <Image Include="wood.jpg">
       <Filter>Source Files</Filter>
     </Image>
+    <Image Include="fabric.jpg">
+      <Filter>Source Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

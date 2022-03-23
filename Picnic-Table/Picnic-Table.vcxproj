@@ -35,6 +35,7 @@
     <None Include="shader_picnic_table.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="fabric.jpg" />
     <Image Include="stone.jpg" />
     <Image Include="wood.jpg" />
   </ItemGroup>
