@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="stone.jpg" />
+    <Image Include="wood.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
